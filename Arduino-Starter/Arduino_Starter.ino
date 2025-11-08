@@ -1,5 +1,5 @@
 // Replace 12345 with the correct team number and then uncomment the line below.
-// #define TEAM_NUMBER 12345
+#define TEAM_NUMBER 21
 
 #ifndef TEAM_NUMBER
 #error "Define your team number with `#define TEAM_NUMBER 12345` at the top of the file."
@@ -18,10 +18,10 @@ void loop()
 {
   // Read the four joystick axes
   // These will be in the range [-1.0, 1.0]
-  float rightX = RR_axisRX();
-  float rightY = RR_axisRY();
-  float leftX = RR_axisLX();
-  float leftY = RR_axisLY();
+  float leftX = RR_axisRY();
+  float leftY = RR_axisRX();
+  float rightX = RR_axisLY();
+  float rightY = RR_axisLX();
 
   // Arcade-drive scheme
   // Left Y-axis = throttle
