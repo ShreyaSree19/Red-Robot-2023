@@ -109,11 +109,18 @@ void loop()
 
   Serial.print("Line sensors=");
   RR_getLineSensors(sensors);
+  long numerator = 0;
+  long denominator = 0;
   for (int i = 0; i < 6; ++i)
   {
     Serial.print(sensors[i]);
     Serial.print(" ");
+    numerator += (sensors[i] * i);
+    denominator += (sensors[i]);
+    Serial.print("Average=");
+    Serial.print(numerator / denominator);
   }
+  
   Serial.print(btnA ? 1 : 0);
   Serial.print(btnB ? 1 : 0);
   Serial.print(btnX ? 1 : 0);
