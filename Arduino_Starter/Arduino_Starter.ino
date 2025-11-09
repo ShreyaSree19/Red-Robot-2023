@@ -13,6 +13,7 @@ void setup()
 }
 
 int temp = 0;
+bool autonomous = false;
 
 void loop()
 {
@@ -40,10 +41,12 @@ void loop()
   // Control motor3 port (unused on base robot) using A/B buttons
   if (btnA)
   {
+    autonomous = true;
     RR_setMotor3(1.0);
   }
   else if (btnB)
   {
+    autonomous = false;
     RR_setMotor3(-1.0);
   }
   else
@@ -81,6 +84,9 @@ void loop()
     // for continuous rotation, try using a DC motor
     if (temp < 180)
       temp += 10;
+    //FAIL SAFE WHILE TESTING
+    RR_setMotor1(0);
+    RR_setMotor2(0);
   }
   RR_setServo1(temp);
 
@@ -115,12 +121,43 @@ void loop()
   {
     Serial.print(sensors[i]);
     Serial.print(" ");
-    numerator += (sensors[i] * i);
+    numerator += (sensors[i] * i*1000);
     denominator += (sensors[i]);
-    Serial.print("Average=");
-    Serial.print(numerator / denominator);
   }
-  
+  Serial.print("Average=");
+  long avg = numerator / (denominator);
+  Serial.print(avg);
+  // aim for 26000 - 29000
+  //left: 29000-36000
+  //right: 19000-21000
+  if (autonomous) {
+      // --- Line following control ---
+    const long target = 27500000; // center value
+    float error = (avg - target)/1000000; // normalize
+    Serial.print("Error = ");
+    Serial.println(error);
+    float Kp = 0.05; // tune this gain experimentally
+
+    // Base speed of motors
+    float baseSpeed = 0.8;
+
+    // Compute turn correction
+    float turn = Kp * error;
+    Serial.print("Turn = ");
+    Serial.println(turn);
+    float leftMotor = baseSpeed - turn;
+    Serial.print("Left speed: ");
+    Serial.println(leftMotor);
+    float rightMotor = baseSpeed + turn;
+    Serial.print("Right speed: ");
+    Serial.println(rightMotor);
+    // Clamp motor values to [-1, 1]
+    leftMotor = constrain(leftMotor, -1, 1);
+    rightMotor = constrain(rightMotor, -1, 1);
+
+    RR_setMotor1(leftMotor);
+    RR_setMotor2(rightMotor);
+  }
   Serial.print(btnA ? 1 : 0);
   Serial.print(btnB ? 1 : 0);
   Serial.print(btnX ? 1 : 0);
