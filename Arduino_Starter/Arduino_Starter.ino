@@ -37,6 +37,9 @@ void loop()
   bool btnY = RR_buttonY();
   bool btnRB = RR_buttonRB();
   bool btnLB = RR_buttonLB();
+  bool btnRT = RR_buttonRT();
+  bool btnLT = RR_buttonLT();
+
 
   // Control motor3 port (unused on base robot) using A/B buttons
   if (btnA)
@@ -69,26 +72,26 @@ void loop()
   }
 
   // Control servo 1 using the dpad
-  // 6 = left, 2 = right, 0 = up, 4 = down, 8 = center
-  if (RR_dpad() == 6)
-  { // left
+  // // 6 = left, 2 = right, 0 = up, 4 = down, 8 = center
+  // if (RR_dpad() == 6)
+  // { // left
 
-    // we can't move a servo less than 0 degrees
-    if (temp > 0)
-      temp -= 10;
-  }
-  else if (RR_dpad() == 2)
-  { // right
+  //   // we can't move a servo less than 0 degrees
+  //   if (temp > 0)
+  //     temp -= 10;
+  // }
+  // else if (RR_dpad() == 2)
+  // { // right
 
-    // we can't move a servo past 180 degrees
-    // for continuous rotation, try using a DC motor
-    if (temp < 180)
-      temp += 10;
-    //FAIL SAFE WHILE TESTING
-    RR_setMotor1(0);
-    RR_setMotor2(0);
-  }
-  RR_setServo1(temp);
+  //   // we can't move a servo past 180 degrees
+  //   // for continuous rotation, try using a DC motor
+  //   if (temp < 180)
+  //     temp += 10;
+  //   //FAIL SAFE WHILE TESTING
+  //   RR_setMotor1(0);
+  //   RR_setMotor2(0);
+  // }
+  // RR_setServo1(temp);
 
   // Control servo 2 using the shoulder buttons
   // This example moves the servo to fixed points
@@ -97,11 +100,21 @@ void loop()
   //  such as a grabber or hook)
   if (btnRB)
   {
-    RR_setServo2(180);
+    if(temp > 0)
+    {
+      temp -= 10;
+      RR_setServo1(temp);
+      RR_setServo2(temp);
+    }
   }
-  else if (btnLB)
+  else if (btnRT)
   {
-    RR_setServo2(0);
+    if(temp < 180) 
+    {
+      temp += 10;
+      RR_setServo1(temp);
+      RR_setServo2(temp);
+    }
   }
 
   // we also have RR_setServo3 and RR_setServo4 available
