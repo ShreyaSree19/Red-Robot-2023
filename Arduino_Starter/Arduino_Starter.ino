@@ -12,7 +12,8 @@ void setup()
   Serial.begin(115200);
 }
 
-int temp = 0;
+int tempBlue = 0;
+int tempBlack = 0;
 bool autonomous = false;
 
 void loop()
@@ -98,26 +99,42 @@ void loop()
   // You can change the angles based on your mechanism
   // (this is great for a mechanism that only has 2 states,
   //  such as a grabber or hook)
-  if (btnRB)
+  
+  if (btnRT)
   {
-    if(temp > 0)
+    if(tempBlue > 0)
     {
-      temp -= 10;
-      RR_setServo1(temp);
-      RR_setServo2(temp);
+      tempBlue -= 10;
+      RR_setServo1(tempBlue);
+      RR_setServo2(tempBlue);
+    }
+  }
+  else if (btnRB)
+  {
+    if(tempBlue < 180) 
+    {
+      tempBlue += 10;
+      RR_setServo1(tempBlue);
+      RR_setServo2(tempBlue);
+    }
+  }
+  
+  if (btnLT)
+  {
+    if(tempBlack > 0)
+    {
+      tempBlack -= 10;
+      RR_setServo3(tempBlack);
     }
   }
   else if (btnRT)
   {
-    if(temp < 180) 
+    if(tempBlack < 180) 
     {
-      temp += 10;
-      RR_setServo1(temp);
-      RR_setServo2(temp);
+      tempBlack += 10;
+      RR_setServo3(tempBlack);
     }
   }
-
-  // we also have RR_setServo3 and RR_setServo4 available
 
   // read the ultrasonic sensors
 
